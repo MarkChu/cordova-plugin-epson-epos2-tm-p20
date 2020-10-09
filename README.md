@@ -1,4 +1,4 @@
-cordova-plugin-epos2
+epsonepos2tmp20
 ====================
 Cordova plugin for Epson ePOS SDK(v2.6.0) for iOS and Android.
 
@@ -13,7 +13,7 @@ Install
 -------
 
 ```
-cordova plugin add cordova-plugin-epson-epos2-tm20
+cordova plugin add epsonepos2tmp20
 ```
 
 API

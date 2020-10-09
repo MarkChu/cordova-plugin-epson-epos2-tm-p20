@@ -1004,8 +1004,8 @@ enum Epos2PrinterSettingPrintSpeed : int {
 - (int) addPageArea:(long)x y:(long)y width:(long)width height:(long)height;
 - (int) addPageDirection:(int)direction;
 - (int) addPagePosition:(long)x y:(long)y;
-- (int) addPageLine:(long)x1 y1:(long)y1 x2:(long)x2 y2:(long)y2 style:(int)style;
-- (int) addPageRectangle:(long)x1 y1:(long)y1 x2:(long)x2 y2:(long)y2 style:(int)style;
+- (int) addPageLine:(long)x y1:(long)y1 x2:(long)x2 y2:(long)y2 style:(int)style;
+- (int) addPageRectangle:(long)x y1:(long)y1 x2:(long)x2 y2:(long)y2 style:(int)style;
 - (int) addCut:(int)type;
 - (int) addPulse:(int)drawer time:(int)time;
 - (int) addCommand:(NSData *)data;
@@ -1041,7 +1041,7 @@ enum Epos2PrinterSettingPrintSpeed : int {
 - (Epos2PrinterStatusInfo *) getStatus;
 - (int) sendData:(long)timeout;
 - (int) requestPrintJobStatus:(NSString *)printJobId;
-- (int) addHLine:(long)x1 x2:(long)x2 style:(int)style;
+- (int) addHLine:(long)x x2:(long)x2 style:(int)style;
 - (int) addVLineBegin:(long)x style:(int)style lineId:(int *)lineId;
 - (int) addVLineEnd:(int)lineId;
 - (int) addSound:(int)pattern repeat:(long)repeat cycle:(long)cycle;

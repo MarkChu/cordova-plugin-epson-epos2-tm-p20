@@ -10,6 +10,7 @@
     BOOL printerConnected;
     int printerSeries;
     int lang;
+    int textLang;
 }
 
 @property (nonatomic, strong) NSString* discoverCallbackId;

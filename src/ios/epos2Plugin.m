@@ -336,8 +336,8 @@ static NSDictionary *printerTypeMap;
 - (void)printLine:(CDVInvokedUrlCommand *)command
 {
     // read command arguments
-    int startX = 0;
-    int endX = 100;
+    long startX = 0;
+    long endX = 100;
     int lineStyle = 0;
     
     if ([command.arguments count] > 1) {
@@ -371,7 +371,7 @@ static NSDictionary *printerTypeMap;
             result = [printer addPagePosition:0 y:0];
         }
         if (result == EPOS2_SUCCESS) {
-            result = [printer addPageLine:startX y1:0 x2:endX y2:0 lineStyle:lineStyle];
+            result = [printer addPageLine:startX y1:0 x2:endX y2:0 Style:lineStyle];
         }
         if (result == EPOS2_SUCCESS) {
             result = [printer addPageEnd];
@@ -395,8 +395,8 @@ static NSDictionary *printerTypeMap;
     int bType = EPOS2_BARCODE_CODE128;
     int hriPosition = 0;
     int hriFont = 0;
-    int bWidth = 2;
-    int bHeight = 70;    
+    long bWidth = 2;
+    long bHeight = 70;    
     
     if ([command.arguments count] > 1) {
         hriPosition = ((NSNumber *)[command.arguments objectAtIndex:1]).intValue;
@@ -427,7 +427,7 @@ static NSDictionary *printerTypeMap;
         result = [printer addBarcode:data
                                 type:bType
                                 hri:hriPosition
-                                hrifont:hriFont
+                                font:hriFont
                                 width:bWidth
                                 height:bHeight];
         if (result != EPOS2_SUCCESS) {
