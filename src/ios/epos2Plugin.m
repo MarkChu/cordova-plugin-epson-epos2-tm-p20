@@ -371,7 +371,7 @@ static NSDictionary *printerTypeMap;
             result = [printer addPagePosition:0 y:0];
         }
         if (result == EPOS2_SUCCESS) {
-            result = [printer addPageLine:startX y1:0 x2:endX y2:0 Style:lineStyle];
+            result = [printer addPageLine:startX y1:0 x2:endX y2:0 style:lineStyle];
         }
         if (result == EPOS2_SUCCESS) {
             result = [printer addPageEnd];
