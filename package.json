@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-epson-epos2",
-  "version": "1.0.3",
+  "version": "1.0.0",
   "cordova": {
     "id": "cordova-plugin-epson-epos2",
     "platforms": [
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/towerism/cordova-plugin-epson-epos2"
+    "url": "https://github.com/MarkChu/cordova-plugin-epson-epos2"
   },
   "keywords": [
     "cordova",
