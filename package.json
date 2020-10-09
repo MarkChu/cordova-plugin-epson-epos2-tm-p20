@@ -1,8 +1,9 @@
 {
-  "name": "cordova-plugin-epson-epos2",
-  "version": "1.0.0",
+  "name": "epsonepos2tmp20",
+  "version": "0.0.2",
+  "description": "",
   "cordova": {
-    "id": "cordova-plugin-epson-epos2",
+    "id": "epsonepos2tmp20",
     "platforms": [
       "android",
       "ios"
@@ -10,17 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MarkChu/cordova-plugin-epson-epos2"
+    "url": "git+https://github.com/MarkChu/cordova-plugin-epson-epos2-tm20.git"
   },
   "keywords": [
-    "cordova",
-    "apache",
     "ecosystem:cordova",
-    "cordova:platform",
-    "epos2",
-    "epson",
-    "printer"
+    "cordova-android",
+    "cordova-ios"
   ],
-  "license": "MIT",
-  "description": "Cordova Plugin integrating the Epson ePOS2 SDK for iOS and Android"
+  "author": "markchu929",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarkChu/cordova-plugin-epson-epos2-tm20/issues"
+  },
+  "homepage": "https://github.com/MarkChu/cordova-plugin-epson-epos2-tm20#readme"
 }

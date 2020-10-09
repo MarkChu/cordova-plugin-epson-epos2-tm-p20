@@ -1,16 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
+<plugin 
+	id="epsonepos2tmp20" 
+	version="0.0.1" 
+	xmlns="http://apache.org/cordova/ns/plugins/1.0">
 
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="cordova-plugin-epson-epos2"
-    version="1.0.0">
-    <name>Cordova Plugin ePOS2</name>
+	<name>epsonepos2tmp20</name>
     <description></description>
     <license>MIT</license>
     <keywords></keywords>
-    <repo>https://github.com/MarkChu/cordova-plugin-epson-epos2.git</repo>
-    <issue>https://github.com/MarkChu/cordova-plugin-epson-epos2/issues</issue>
+    <repo>https://github.com/MarkChu/cordova-plugin-epson-epos2-tm20.git</repo>
+    <issue>https://github.com/MarkChu/cordova-plugin-epson-epos2-tm20/issues</issue>
 
-    <!-- android -->
+	<!-- android -->
     <platform name="android">
       <js-module src="www/plugin.js" name="plugin">
         <runs/>
@@ -33,13 +34,14 @@
 
       <source-file src="src/android/epos2Plugin.java" target-dir="src/com/cordova/plugin" />
 
-      <!-- libs -->
+      <!-- libs 
       <source-file src="src/android/libs/arm64-v8a/libepos2.so" target-dir="libs/arm64-v8a/" />
       <source-file src="src/android/libs/armeabi-v7a/libepos2.so" target-dir="libs/armeabi-v7a/" />
       <source-file src="src/android/libs/armeabi/libepos2.so" target-dir="libs/armeabi/" />
       <source-file src="src/android/libs/x86_64/libepos2.so" target-dir="libs/x86_64/" />
       <source-file src="src/android/libs/x86/libepos2.so" target-dir="libs/x86/" />
-      <lib-file src="src/android/libs/ePOS2.jar" target-dir="libs/" />
+      -->
+      <lib-file src="src/android/libs/ePOS2.jar" target-dir="/libs/" />
 
       <!-- jniLibs -->
       <source-file src="src/android/libs/arm64-v8a/libepos2.so" target-dir="jniLibs/arm64-v8a/" />
@@ -47,7 +49,10 @@
       <source-file src="src/android/libs/armeabi/libepos2.so" target-dir="jniLibs/armeabi/" />
       <source-file src="src/android/libs/x86_64/libepos2.so" target-dir="jniLibs/x86_64/" />
       <source-file src="src/android/libs/x86/libepos2.so" target-dir="jniLibs/x86/" />
+      <!--
       <lib-file src="src/android/libs/ePOS2.jar" target-dir="jniLibs/" />
+      -->
+      
     </platform>
 
     <platform name="ios">
