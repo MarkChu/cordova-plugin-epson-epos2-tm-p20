@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSString* discoverCallbackId;
 
 // The hooks for our plugin commands
+- (void)setLang:(CDVInvokedUrlCommand *)command;
 - (void)startDiscover:(CDVInvokedUrlCommand *)command;
 - (void)stopDiscover:(CDVInvokedUrlCommand *)command;
 - (void)connectPrinter:(CDVInvokedUrlCommand *)command;
