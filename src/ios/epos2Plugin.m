@@ -3,6 +3,7 @@
 #import <Cordova/CDVAvailability.h>
 
 static NSDictionary *printerTypeMap;
+static NSDictionary *barcodeTypeMap;
 
 @interface epos2Plugin()<Epos2DiscoveryDelegate, Epos2PtrReceiveDelegate>
 @end
@@ -40,6 +41,25 @@ static NSDictionary *printerTypeMap;
         @"TM-U330":   [NSNumber numberWithInt:EPOS2_TM_U330],
         @"TM-L90":    [NSNumber numberWithInt:EPOS2_TM_L90],
         @"TM-H6000":  [NSNumber numberWithInt:EPOS2_TM_H6000]
+    };
+    
+    barcodeTypeMap = @{
+        @"EPOS2_BARCODE_UPC_A":    [NSNumber numberWithInt:EPOS2_BARCODE_UPC_A],
+        @"EPOS2_BARCODE_UPC_E":    [NSNumber numberWithInt:EPOS2_BARCODE_UPC_E],
+        @"EPOS2_BARCODE_EAN13":    [NSNumber numberWithInt:EPOS2_BARCODE_EAN13],
+        @"EPOS2_BARCODE_JAN13":    [NSNumber numberWithInt:EPOS2_BARCODE_JAN13],
+        @"EPOS2_BARCODE_EAN8":  [NSNumber numberWithInt:EPOS2_BARCODE_EAN8],
+        @"EPOS2_BARCODE_JAN8":    [NSNumber numberWithInt:EPOS2_BARCODE_JAN8],
+        @"EPOS2_BARCODE_CODE39":    [NSNumber numberWithInt:EPOS2_BARCODE_CODE39],
+        @"EPOS2_BARCODE_ITF":    [NSNumber numberWithInt:EPOS2_BARCODE_ITF],
+        @"EPOS2_BARCODE_CODABAR":    [NSNumber numberWithInt:EPOS2_BARCODE_CODABAR],
+        @"EPOS2_BARCODE_CODE93":    [NSNumber numberWithInt:EPOS2_BARCODE_CODE93],
+        @"EPOS2_BARCODE_CODE128":    [NSNumber numberWithInt:EPOS2_BARCODE_CODE128],
+        @"EPOS2_BARCODE_GS1_128":    [NSNumber numberWithInt:EPOS2_BARCODE_GS1_128],
+        @"EPOS2_BARCODE_GS1_DATABAR_OMNIDIRECTIONAL":  [NSNumber numberWithInt:EPOS2_BARCODE_GS1_DATABAR_OMNIDIRECTIONAL],
+        @"EPOS2_BARCODE_GS1_DATABAR_TRUNCATED":    [NSNumber numberWithInt:EPOS2_BARCODE_GS1_DATABAR_TRUNCATED],
+        @"EPOS2_BARCODE_GS1_DATABAR_LIMITED":  [NSNumber numberWithInt:EPOS2_BARCODE_GS1_DATABAR_LIMITED],
+        @"EPOS2_BARCODE_GS1_DATABAR_EXPANDED":   [NSNumber numberWithInt:EPOS2_BARCODE_GS1_DATABAR_EXPANDED]
     };
 }
 
@@ -388,27 +408,28 @@ static NSDictionary *printerTypeMap;
     }];
 }
 
-- (void)printBarCode128:(CDVInvokedUrlCommand *)command
+- (void)printBarCode:(CDVInvokedUrlCommand *)command
 {
     // read command arguments
     NSString *data = [command.arguments objectAtIndex:0];
-    int bType = EPOS2_BARCODE_CODE128;
+    NSString *type = [command.arguments objectAtIndex:1];
+    NSNumber *bType = [barcodeTypeMap objectForKey:type];
     int hriPosition = 0;
     int hriFont = 0;
     long bWidth = 2;
     long bHeight = 70;    
     
-    if ([command.arguments count] > 1) {
-        hriPosition = ((NSNumber *)[command.arguments objectAtIndex:1]).intValue;
-    }
     if ([command.arguments count] > 2) {
-        hriFont = ((NSNumber *)[command.arguments objectAtIndex:2]).intValue;
+        hriPosition = ((NSNumber *)[command.arguments objectAtIndex:2]).intValue;
     }
     if ([command.arguments count] > 3) {
-        bWidth = ((NSNumber *)[command.arguments objectAtIndex:3]).intValue;
+        hriFont = ((NSNumber *)[command.arguments objectAtIndex:3]).intValue;
     }
     if ([command.arguments count] > 4) {
-        bHeight = ((NSNumber *)[command.arguments objectAtIndex:4]).intValue;
+        bWidth = ((NSNumber *)[command.arguments objectAtIndex:4]).intValue;
+    }
+    if ([command.arguments count] > 5) {
+        bHeight = ((NSNumber *)[command.arguments objectAtIndex:5]).intValue;
     }
 
     // (re-)connect printer with stored information
@@ -424,8 +445,8 @@ static NSDictionary *printerTypeMap;
         int result = EPOS2_SUCCESS;
         CDVPluginResult *cordovaResult;
         
-        result = [printer addBarcode:data
-                                type:bType
+        result = [self->printer addBarcode:data
+                                type:bType.intValue
                                 hri:hriPosition
                                 font:hriFont
                                 width:bWidth

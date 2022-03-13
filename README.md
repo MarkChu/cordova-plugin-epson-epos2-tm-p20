@@ -129,6 +129,55 @@ cordova.epos2.printText(stringData, 0, 1, 2, false)
   });
 ```
 
+#### .printBarCode(data, type, hriPosition,hriFont,Bwidth,Bheight,terminate)
+Print different types of barcodes. **Please refer to the Epson SDK documentation for correctly encoding the data**.
+
+Types:
+
+* EPOS2_BARCODE_UPC_A
+* EPOS2_BARCODE_UPC_E
+* EPOS2_BARCODE_EAN133
+* EPOS2_BARCODE_JAN133
+* EPOS2_BARCODE_EAN8
+* EPOS2_BARCODE_JAN8,
+* EPOS2_BARCODE_CODE39
+* EPOS2_BARCODE_ITF
+* EPOS2_BARCODE_CODABAR
+* EPOS2_BARCODE_CODE93
+* EPOS2_BARCODE_CODE128
+* EPOS2_BARCODE_GS1_128
+* EPOS2_BARCODE_GS1_DATABAR_OMNIDIRECTIONAL
+* EPOS2_BARCODE_GS1_DATABAR_TRUNCATED
+* EPOS2_BARCODE_GS1_DATABAR_LIMITED
+* EPOS2_BARCODE_GS1_DATABAR_EXPANDED
+
+
+Function parameters:
+* @param {String} Barcode Data String, Encode Data or Specify start character 
+* @param {String} Type Type of barcode
+* @param {Number} Specifies the HRI position.(0 - 3) 0:No print 1:above 2:below 3:both
+* @param {Number} Specifies the HRI font. (0 - 4) 
+* @param {Number} Specifies the width of a single module in dots. (2-6)
+* @param {Number} Specifies the height of the barcode in dots. (1 - 255)
+* @param {Boolean} [terminate=false] Send additional line feeds an a "cut" command to complete the print
+* @return {Promise} resolving on success, rejecting on error
+
+Example
+
+```
+cordova.epos2.printBarCode("123456789011", "EPOS2_BARCODE_EAN13", 0,0,2,70, true)
+.then(res => console.debug(res))
+.catch(e => console.error(e))
+```
+
+#### .printBarCode128(data, type, hriPosition,hriFont,Bwidth,Bheight,terminate)
+
+Helper function to print barcode 128 CODEB
+
+```
+cordova.epos2.printBarCode128("11111", 0,0,2,70, true).then(res => console.debug(res)).catch(e => console.error(e))
+```
+
 #### .printImage(data, printMode, halfTone, terminate)
 Send image data as data-url to the connected printer.
 
