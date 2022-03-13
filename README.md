@@ -30,34 +30,40 @@ functions and their arguments. All API functions are asynchronous and return a
 This will search for supported printers connected to your mobiel device
 via Bluetooth or available in local area network (LAN)
 
-```
-cordova.epos2.startDiscover(function(deviceInfo) {
+```js
+cordova.epos2.startDiscover((deviceInfo) => {
     // success callback with deviceInfo
-}).catch(function(error) => {
+    console.log(deviceInfo);
+}, (error) => {
     // error callback
+    console.err(error);
 });
 ```
 
 #### .stopDiscover()
-```
+
+```js
 cordova.epos2.stopDiscover()
-  .then(function() {
+  .then(() => {
     // success callback
   })
-  .catch(function(error) {
+  .catch((error) => {
     // error callback
   });
 ```
 
 #### .getSupportedModels()
 Resolves with an array of strings denoting the supported printer models.
-```
+
+```js
 cordova.epos2.getSupportedModels()
-  .then(function(models) {
+  .then((models) => {
     // success callback
+    console.log(models);
   })
-  .catch(function(error) {
+  .catch((error) => {
     // error callback
+    console.err(error);
   });
 ```
 
@@ -68,35 +74,43 @@ Establish a connection to the given printer device.
 For `device` either provide a device information objects as retrieved from discovery
 or string with device address ('BT:xx:xx:xx:xx:xx' or 'TCP:xx.xx.xx.xx').
 
-```
+```js
 cordova.epos2.connectPrinter(device, printerModel)
-  .then(function() {
+  .then((connected) => {
     // success callback
+    console.log(connected);
   })
   .catch(function(error) {
     // error callback
+    console.err(error);
   });
 ```
 
 #### .disconnectPrinter()
-```
+
+```js
 cordova.epos2.disconnectPrinter()
-  .then(function() {
+  .then((disconnected) => {
     // success callback
+    console.log(disconnected);
   })
-  .catch(function(error) {
+  .catch((error) => {
     // error callback
+    console.err(error);
   });
 ```
 
 #### .getPrinterStatus()
-```
+
+```js
 cordova.epos2.getPrinterStatus()
-  .then(function(status) {
+  .then((status) => {
     // success callback with status object
+    console.log(status);
   })
-  .catch(function(error) {
+  .catch((error) => {
     // error callback
+    console.err(error);
   });
 ```
 
@@ -142,10 +156,10 @@ cordova.epos2.setLang(lang, textLang)
 One-shot function printing the given text. Use '\n' in string data in order to move to next line.
 Cut feed is added automatically.
 
-```
-cordova.epos2.print(stringData, function() => {
+```js
+cordova.epos2.print(stringData, () => {
     // success callback
-}, function(error) => {
+}, (error) => {
     // error callback
 });
 ```
@@ -155,12 +169,12 @@ Send text to the connected printer. Also accepts parameters for font type, text 
 Can be called multiple times for additional text lines. Set `terminate` to True in order to complete
 the print job and add cut feed.
 
-```
+```js
 cordova.epos2.printText(stringData, 0, 1, 2, false)
-  .then(function() {}
+  .then(() => {
     // success callback
   })
-  .catch(function(error) => {
+  .catch((error) => {
     // error callback
   });
 ```
@@ -168,12 +182,12 @@ cordova.epos2.printText(stringData, 0, 1, 2, false)
 #### .printImage(data, printMode, halfTone, terminate)
 Send image data as data-url to the connected printer.
 
-```
+```js
 cordova.epos2.printImage(imageSource, 0, 0, false)
-  .then(function() {}
+  .then(() => {
     // success callback
   })
-  .catch(function(error) => {
+  .catch((error) => {
     // error callback
   });
 ```
