@@ -73,6 +73,24 @@ function execDiscoverCommand(successCallback, errorCallback) {
  */
 var epos2 = {
   /**
+   * Set language for printer
+   *
+   * @param {String} lang
+   * @param {String} textLang
+   * @return {Promise}
+   */
+   setLang: function(lang, textLang) {
+    var args = [];
+    if (lang && typeof lang === "string") {
+      args.push(lang);
+    }
+    if (textLang && typeof textLang === "string") {
+      args.push(textLang);
+    }
+    return _exec("setLang", args, arguments);
+  },
+
+  /**
    * Start device discovery
    *
    * This will trigger the successCallback function for every

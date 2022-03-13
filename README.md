@@ -100,6 +100,42 @@ cordova.epos2.getPrinterStatus()
   });
 ```
 
+### Set the printer language
+
+Let the language of the printer or text before printing. `EPOS2_MODEL_ANK` and `EPOS2_LANG_EN` are default.
+
+Available languages for `lang` (model language) are:
+
+* EPOS2_MODEL_ANK,
+* EPOS2_MODEL_CHINESE
+* EPOS2_MODEL_TAIWANAN
+* EPOS2_MODEL_KOREAN
+* EPOS2_MODEL_THAI
+* EPOS2_MODEL_SOUTHASIA
+
+For `textLang`:
+
+* EPOS2_LANG_EN
+* EPOS2_LANG_JA
+* EPOS2_LANG_ZH_CN
+* EPOS2_LANG_ZH_TW
+* EPOS2_LANG_KO
+* EPOS2_LANG_TH
+* EPOS2_LANG_VI
+* EPOS2_LANG_MULTI
+* EPOS2_PARAM_DEFAULT
+
+```
+cordova.epos2.setLang(lang, textLang)
+  .then(function(status) {
+    // status=true if language was set
+    console.log(status);
+  })
+  .catch(function(error) {
+    // error callback
+  });
+```
+
 ### Printing
 
 #### .print(stringData, successCallback, errorCallback)
