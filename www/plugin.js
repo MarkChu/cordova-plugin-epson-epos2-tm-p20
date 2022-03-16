@@ -272,8 +272,38 @@ var epos2 = {
       });
   },
 
-  /**
+   /**
    * Send Barcode data to the connected printer
+   *
+   * Set `terminate` to True in order to complete the print job.
+   *
+   * @param {String} Barcode Data String 
+   * @param {String} Type Type of barcode
+   * @param {Number} Specifies the HRI position.(0 - 3) 0:No print 1:above 2:below 3:both
+   * @param {Number} Specifies the HRI font. (0 - 4) 
+   * @param {Number} Specifies the width of a single module in dots. (2-6)
+   * @param {Number} Specifies the height of the barcode in dots. (1 - 255)
+   * @param {Boolean} [terminate=false] Send additional line feeds an a "cut" command to complete the print
+   * @return {Promise} resolving on success, rejecting on error
+   */
+    printBarCode: function(
+      data,
+      type,
+      hriPosition,
+      hriFont,
+      Bwidth,
+      Bheight,
+      terminate,
+    ) {
+      var data = data;
+      return _exec("printBarCode", [data, type, , hriPosition || 0, hriFont || 0 , Bwidth || 2, Bheight || 70], arguments)
+        .then(function(result) {
+          return terminate ? _exec("sendData", [], []) : result;
+        });
+    },
+
+  /**
+   * Send Barcode128 data to the connected printer
    *
    * Set `terminate` to True in order to complete the print job.
    *
@@ -283,8 +313,6 @@ var epos2 = {
    * @param {Number} Specifies the width of a single module in dots. (2-6)
    * @param {Number} Specifies the height of the barcode in dots. (1 - 255)
    * @param {Boolean} [terminate=false] Send additional line feeds an a "cut" command to complete the print
-   * @param {Function} [successCallback]
-   * @param {Function} [errorCallback]
    * @return {Promise} resolving on success, rejecting on error
    */
   printBarCode128: function(
@@ -294,25 +322,9 @@ var epos2 = {
     Bwidth,
     Bheight,
     terminate,
-    successCallback,
-    errorCallback
   ) {
     var data = "{B" + data;
-    return _exec("printBarCode128", [data , hriPosition || 0, hriFont || 0 , Bwidth || 2, Bheight || 70], arguments)
-      .then(function(result) {
-        return terminate ? _exec("sendData", [], []) : result;
-      })
-      .then(function(result) {
-        if (typeof successCallback === "function") {
-          successCallback(result);
-        }
-      })
-      .catch(function(err) {
-        if (typeof errorCallback === "function") {
-          errorCallback(err);
-        }
-        throw err;
-      });
+    return this.printBarCode(data, "EPOS2_BARCODE_CODE128", hriPosition, hriFont, Bwidth, Bheight, terminate);
   },
 
   /**
