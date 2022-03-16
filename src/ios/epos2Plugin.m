@@ -6,6 +6,8 @@ static NSDictionary *printerTypeMap;
 static NSDictionary *barcodeTypeMap;
 static NSDictionary *langMap;
 static NSDictionary *textLangMap;
+static NSDictionary *symbolMap;
+static NSDictionary *levelMap;
 
 @interface epos2Plugin()<Epos2DiscoveryDelegate, Epos2PtrReceiveDelegate>
 @end
@@ -101,6 +103,43 @@ static NSDictionary *textLangMap;
     
     CDVPluginResult *cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
     [self.commandDelegate sendPluginResult:cordovaResult callbackId:command.callbackId];
+    symbolMap = @{
+            @"EPOS2_SYMBOL_PDF417_STANDARD":    [NSNumber numberWithInt:EPOS2_SYMBOL_PDF417_STANDARD],
+            @"EPOS2_SYMBOL_PDF417_TRUNCATED":    [NSNumber numberWithInt:EPOS2_SYMBOL_PDF417_TRUNCATED],
+            @"EPOS2_SYMBOL_QRCODE_MODEL_1":    [NSNumber numberWithInt:EPOS2_SYMBOL_QRCODE_MODEL_1],
+            @"EPOS2_SYMBOL_QRCODE_MODEL_2":    [NSNumber numberWithInt:EPOS2_SYMBOL_QRCODE_MODEL_2],
+            @"EPOS2_SYMBOL_QRCODE_MICRO":    [NSNumber numberWithInt:EPOS2_SYMBOL_QRCODE_MICRO],
+            @"EPOS2_SYMBOL_MAXICODE_MODE_2":  [NSNumber numberWithInt:EPOS2_SYMBOL_MAXICODE_MODE_2],
+            @"EPOS2_SYMBOL_MAXICODE_MODE_3":    [NSNumber numberWithInt:EPOS2_SYMBOL_MAXICODE_MODE_3],
+            @"EPOS2_SYMBOL_MAXICODE_MODE_5":    [NSNumber numberWithInt:EPOS2_SYMBOL_MAXICODE_MODE_5],
+            @"EPOS2_SYMBOL_MAXICODE_MODE_6":    [NSNumber numberWithInt:EPOS2_SYMBOL_MAXICODE_MODE_6],
+            @"EPOS2_SYMBOL_GS1_DATABAR_STACKED":    [NSNumber numberWithInt:EPOS2_SYMBOL_GS1_DATABAR_STACKED],
+            @"EPOS2_SYMBOL_GS1_DATABAR_STACKED_OMNIDIRECTIONAL":    [NSNumber numberWithInt:EPOS2_SYMBOL_GS1_DATABAR_STACKED_OMNIDIRECTIONAL],
+            @"EPOS2_SYMBOL_GS1_DATABAR_EXPANDED_STACKED":    [NSNumber numberWithInt:EPOS2_SYMBOL_GS1_DATABAR_EXPANDED_STACKED],
+            @"EPOS2_SYMBOL_AZTECCODE_FULLRANGE":    [NSNumber numberWithInt:EPOS2_SYMBOL_AZTECCODE_FULLRANGE],
+            @"EPOS2_SYMBOL_AZTECCODE_COMPACT":  [NSNumber numberWithInt:EPOS2_SYMBOL_AZTECCODE_COMPACT],
+            @"EPOS2_SYMBOL_DATAMATRIX_SQUARE":    [NSNumber numberWithInt:EPOS2_SYMBOL_DATAMATRIX_SQUARE],
+            @"EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_8":  [NSNumber numberWithInt:EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_8],
+            @"EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_12":   [NSNumber numberWithInt:EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_12],
+            @"EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_16":   [NSNumber numberWithInt:EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_16]
+        };
+    
+    levelMap = @{
+            @"EPOS2_LEVEL_0":    [NSNumber numberWithInt:EPOS2_LEVEL_0],
+            @"EPOS2_LEVEL_1":    [NSNumber numberWithInt:EPOS2_LEVEL_1],
+            @"EPOS2_LEVEL_2":    [NSNumber numberWithInt:EPOS2_LEVEL_2],
+            @"EPOS2_LEVEL_3":    [NSNumber numberWithInt:EPOS2_LEVEL_3],
+            @"EPOS2_LEVEL_4":  [NSNumber numberWithInt:EPOS2_LEVEL_4],
+            @"EPOS2_LEVEL_5":    [NSNumber numberWithInt:EPOS2_LEVEL_5],
+            @"EPOS2_LEVEL_6":    [NSNumber numberWithInt:EPOS2_LEVEL_6],
+            @"EPOS2_LEVEL_7":    [NSNumber numberWithInt:EPOS2_LEVEL_7],
+            @"EPOS2_LEVEL_8":    [NSNumber numberWithInt:EPOS2_LEVEL_8],
+            @"EPOS2_PARAM_DEFAULT":    [NSNumber numberWithInt:EPOS2_PARAM_DEFAULT],
+            @"EPOS2_LEVEL_L":    [NSNumber numberWithInt:EPOS2_LEVEL_L],
+            @"EPOS2_LEVEL_M":    [NSNumber numberWithInt:EPOS2_LEVEL_M],
+            @"EPOS2_LEVEL_Q":  [NSNumber numberWithInt:EPOS2_LEVEL_Q],
+            @"EPOS2_LEVEL_H":    [NSNumber numberWithInt:EPOS2_LEVEL_H]
+        };
 }
 
 - (void)startDiscover:(CDVInvokedUrlCommand *)command
@@ -550,6 +589,61 @@ static NSDictionary *textLangMap;
         if (result != EPOS2_SUCCESS) {
             NSLog(@"[epos2] Error in Epos2Printer.addImage(): %d", result);
             cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error 0x00040: Failed to add image data"];
+        } else {
+            cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+        }
+        
+        [self.commandDelegate sendPluginResult:cordovaResult callbackId:printCallbackId];
+    }];
+}
+
+- (void)printSymbol:(CDVInvokedUrlCommand *)command
+{
+    // read command arguments
+    NSString *data = [command.arguments objectAtIndex:0];
+    NSString *type = [command.arguments objectAtIndex:1];
+    NSNumber *bType = [symbolMap objectForKey:type];
+    NSNumber *level = [NSNumber numberWithInt:EPOS2_PARAM_DEFAULT];
+    long width = 3;
+    long height = 3;
+    long size = 0;
+    
+    if ([command.arguments count] > 2) {
+        NSString *levelStr = ((NSString *)[command.arguments objectAtIndex:2]);
+        level = [levelMap objectForKey:levelStr];
+    }
+    if ([command.arguments count] > 3) {
+        width = ((NSNumber *)[command.arguments objectAtIndex:3]).intValue;
+    }
+    if ([command.arguments count] > 4) {
+        height = ((NSNumber *)[command.arguments objectAtIndex:4]).intValue;
+    }
+    if ([command.arguments count] > 5) {
+        size = ((NSNumber *)[command.arguments objectAtIndex:5]).intValue;
+    }
+
+    // (re-)connect printer with stored information
+    if (![self _connectPrinter]) {
+        CDVPluginResult *cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error 0x00013: Printer is not connected"];
+        [self.commandDelegate sendPluginResult:cordovaResult callbackId:command.callbackId];
+        return;
+    }
+    
+    NSString *printCallbackId = command.callbackId;
+        
+    [self.commandDelegate runInBackground:^{
+        int result = EPOS2_SUCCESS;
+        CDVPluginResult *cordovaResult;
+        
+        result = [self->printer addSymbol:data
+                                type:bType.intValue
+                                level:level.intValue
+                                width:width
+                                height:height
+                                size:size];
+        if (result != EPOS2_SUCCESS) {
+            NSLog(@"[epos2] Error in Epos2Printer.printSymbol(): %d", result);
+            cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error 0x00040: Failed to add barcode data"];
         } else {
             cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
         }

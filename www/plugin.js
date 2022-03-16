@@ -365,6 +365,28 @@ var epos2 = {
       });
   },
 
+   /**
+   * Send Barcode data to the connected printer
+   *
+   * Set `terminate` to True in order to complete the print job.
+   *
+   * @return {Promise} resolving on success, rejecting on error
+   */
+    printSymbol: function(
+      data,
+      type,
+      level,
+      width,
+      height,
+      size,
+      terminate
+    ) {
+      return _exec("printSymbol", [data , type || 0, level, width, height, size], arguments)
+        .then(function(result) {
+          return terminate ? _exec("sendData", [], []) : result;
+        })
+    },
+
   /**
    * Get status information about the connected printer
    *
