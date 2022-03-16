@@ -4,6 +4,8 @@
 
 static NSDictionary *printerTypeMap;
 static NSDictionary *barcodeTypeMap;
+static NSDictionary *langMap;
+static NSDictionary *textLangMap;
 
 @interface epos2Plugin()<Epos2DiscoveryDelegate, Epos2PtrReceiveDelegate>
 @end
@@ -17,8 +19,8 @@ static NSDictionary *barcodeTypeMap;
     printerStatus = nil;
     printerConnected = NO;
     printerSeries = EPOS2_TM_P20;
-    lang = EPOS2_MODEL_TAIWAN;
-    textLang = EPOS2_LANG_ZH_TW;
+    lang = EPOS2_MODEL_ANK;
+    textLang = EPOS2_LANG_EN;
 
     printerTypeMap = @{
         @"TM-M10":    [NSNumber numberWithInt:EPOS2_TM_M10],
@@ -61,6 +63,44 @@ static NSDictionary *barcodeTypeMap;
         @"EPOS2_BARCODE_GS1_DATABAR_LIMITED":  [NSNumber numberWithInt:EPOS2_BARCODE_GS1_DATABAR_LIMITED],
         @"EPOS2_BARCODE_GS1_DATABAR_EXPANDED":   [NSNumber numberWithInt:EPOS2_BARCODE_GS1_DATABAR_EXPANDED]
     };
+
+    langMap = @{
+        @"EPOS2_MODEL_ANK":    [NSNumber numberWithInt:EPOS2_MODEL_ANK],
+        @"EPOS2_MODEL_CHINESE":    [NSNumber numberWithInt:EPOS2_MODEL_CHINESE],
+        @"EPOS2_MODEL_TAIWAN":    [NSNumber numberWithInt:EPOS2_MODEL_TAIWAN],
+        @"EPOS2_MODEL_KOREAN":    [NSNumber numberWithInt:EPOS2_MODEL_KOREAN],
+        @"EPOS2_MODEL_THAI":  [NSNumber numberWithInt:EPOS2_MODEL_THAI],
+        @"EPOS2_MODEL_SOUTHASIA":  [NSNumber numberWithInt:EPOS2_MODEL_SOUTHASIA]
+    };
+    
+    textLangMap = @{
+        @"EPOS2_LANG_EN":    [NSNumber numberWithInt:EPOS2_LANG_EN],
+        @"EPOS2_LANG_JA":    [NSNumber numberWithInt:EPOS2_LANG_JA],
+        @"EPOS2_LANG_ZH_CN":    [NSNumber numberWithInt:EPOS2_LANG_ZH_CN],
+        @"EPOS2_LANG_ZH_TW":    [NSNumber numberWithInt:EPOS2_LANG_ZH_TW],
+        @"EPOS2_LANG_KO":    [NSNumber numberWithInt:EPOS2_LANG_KO],
+        @"EPOS2_LANG_TH":    [NSNumber numberWithInt:EPOS2_LANG_TH],
+        @"EPOS2_LANG_VI":    [NSNumber numberWithInt:EPOS2_LANG_VI],
+        @"EPOS2_LANG_MULTI":    [NSNumber numberWithInt:EPOS2_LANG_MULTI],
+        @"EPOS2_PARAM_DEFAULT":    [NSNumber numberWithInt:EPOS2_PARAM_DEFAULT]
+    };
+}
+
+-(void)setLang:(CDVInvokedUrlCommand *)command
+{
+    if ([command.arguments count] > 1) {
+        NSString *arg = [command.arguments objectAtIndex:1];
+        NSNumber *match = [textLangMap objectForKey:arg];
+        self->textLang = [match intValue];
+    }
+    if ([command.arguments count] > 0) {
+        NSString *arg = [command.arguments objectAtIndex:0];
+        NSNumber *match = [langMap objectForKey:arg];
+        self->lang = [match intValue];
+    }
+    
+    CDVPluginResult *cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+    [self.commandDelegate sendPluginResult:cordovaResult callbackId:command.callbackId];
 }
 
 - (void)startDiscover:(CDVInvokedUrlCommand *)command
@@ -315,26 +355,26 @@ static NSDictionary *barcodeTypeMap;
         int result = EPOS2_SUCCESS;
         CDVPluginResult *cordovaResult;
         
-        result = [printer addTextFont:textFont];
+        result = [self->printer addTextFont:textFont];
 
         if (result == EPOS2_SUCCESS) {
-            result = [printer addTextLang:textLang];
+            result = [self->printer addTextLang:self->textLang];
         }       
 
         if (result == EPOS2_SUCCESS) {
-            result = [printer addTextSize:textSize height:textSize];
+            result = [self->printer addTextSize:textSize height:textSize];
         }
         
         if (result == EPOS2_SUCCESS) {
-            result = [printer addTextAlign:textAlign];
+            result = [self->printer addTextAlign:textAlign];
         }
         
         if (result == EPOS2_SUCCESS) {
             for (NSString *data in printData) {
                 if ([data isEqualToString:@"\n"]) {
-                    result = [printer addFeedLine:1];
+                    result = [self->printer addFeedLine:1];
                 } else {
-                    result = [printer addText:data];
+                    result = [self->printer addText:data];
                 }
                 
                 if (result != EPOS2_SUCCESS) {
