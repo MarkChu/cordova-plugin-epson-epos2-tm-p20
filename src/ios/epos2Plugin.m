@@ -86,23 +86,7 @@ static NSDictionary *levelMap;
         @"EPOS2_LANG_MULTI":    [NSNumber numberWithInt:EPOS2_LANG_MULTI],
         @"EPOS2_PARAM_DEFAULT":    [NSNumber numberWithInt:EPOS2_PARAM_DEFAULT]
     };
-}
 
--(void)setLang:(CDVInvokedUrlCommand *)command
-{
-    if ([command.arguments count] > 1) {
-        NSString *arg = [command.arguments objectAtIndex:1];
-        NSNumber *match = [textLangMap objectForKey:arg];
-        self->textLang = [match intValue];
-    }
-    if ([command.arguments count] > 0) {
-        NSString *arg = [command.arguments objectAtIndex:0];
-        NSNumber *match = [langMap objectForKey:arg];
-        self->lang = [match intValue];
-    }
-    
-    CDVPluginResult *cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
-    [self.commandDelegate sendPluginResult:cordovaResult callbackId:command.callbackId];
     symbolMap = @{
             @"EPOS2_SYMBOL_PDF417_STANDARD":    [NSNumber numberWithInt:EPOS2_SYMBOL_PDF417_STANDARD],
             @"EPOS2_SYMBOL_PDF417_TRUNCATED":    [NSNumber numberWithInt:EPOS2_SYMBOL_PDF417_TRUNCATED],
@@ -140,6 +124,23 @@ static NSDictionary *levelMap;
             @"EPOS2_LEVEL_Q":  [NSNumber numberWithInt:EPOS2_LEVEL_Q],
             @"EPOS2_LEVEL_H":    [NSNumber numberWithInt:EPOS2_LEVEL_H]
         };
+}
+
+-(void)setLang:(CDVInvokedUrlCommand *)command
+{
+    if ([command.arguments count] > 1) {
+        NSString *arg = [command.arguments objectAtIndex:1];
+        NSNumber *match = [textLangMap objectForKey:arg];
+        self->textLang = [match intValue];
+    }
+    if ([command.arguments count] > 0) {
+        NSString *arg = [command.arguments objectAtIndex:0];
+        NSNumber *match = [langMap objectForKey:arg];
+        self->lang = [match intValue];
+    }
+    
+    CDVPluginResult *cordovaResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+    [self.commandDelegate sendPluginResult:cordovaResult callbackId:command.callbackId];
 }
 
 - (void)startDiscover:(CDVInvokedUrlCommand *)command
