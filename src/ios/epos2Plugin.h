@@ -25,6 +25,7 @@
 - (void)printImage:(CDVInvokedUrlCommand *)command;
 - (void)printLine:(CDVInvokedUrlCommand *)command;
 - (void)printBarCode128:(CDVInvokedUrlCommand *)command;
+- (void)printSymbol:(CDVInvokedUrlCommand *)command;
 - (void)sendData:(CDVInvokedUrlCommand *)command;
 
 @end

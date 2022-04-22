@@ -220,6 +220,55 @@ cordova.epos2.printBarCode("123456789011", "EPOS2_BARCODE_EAN13", 0,0,2,70, true
 .catch(e => console.error(e))
 ```
 
+#### .printSymbol(data, type, level, width, height, size,terminate)
+Print different types of symbols like QR codes. **Please refer to the Epson SDK documentation for correctly encoding the data**.
+
+Types:
+
+* EPOS2_SYMBOL_PDF417_STANDARD
+* EPOS2_SYMBOL_PDF417_TRUNCATED
+* EPOS2_SYMBOL_QRCODE_MODEL_1
+* EPOS2_SYMBOL_QRCODE_MODEL_2
+* EPOS2_SYMBOL_QRCODE_MICRO
+* EPOS2_SYMBOL_MAXICODE_MODE_2
+* EPOS2_SYMBOL_MAXICODE_MODE_3
+* EPOS2_SYMBOL_MAXICODE_MODE_5
+* EPOS2_SYMBOL_MAXICODE_MODE_6
+* EPOS2_SYMBOL_GS1_DATABAR_STACKED
+* EPOS2_SYMBOL_GS1_DATABAR_STACKED_OMNIDIRECTIONAL
+* EPOS2_SYMBOL_GS1_DATABAR_EXPANDED_STACKED
+* EPOS2_SYMBOL_AZTECCODE_FULLRANGE
+* EPOS2_SYMBOL_AZTECCODE_COMPACT
+* EPOS2_SYMBOL_DATAMATRIX_SQUARE
+* EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_8
+* EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_12
+* EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_16
+
+
+Level parameters:
+* EPOS2_LEVEL_0
+* EPOS2_LEVEL_1
+* EPOS2_LEVEL_2
+* EPOS2_LEVEL_3
+* EPOS2_LEVEL_4
+* EPOS2_LEVEL_5
+* EPOS2_LEVEL_6
+* EPOS2_LEVEL_7
+* EPOS2_LEVEL_8
+* EPOS2_PARAM_DEFAULT
+* EPOS2_LEVEL_L
+* EPOS2_LEVEL_M
+* EPOS2_LEVEL_Q
+* EPOS2_LEVEL_H
+
+Example
+
+```
+cordova.epos2.printSymbol("https://github.com/MarkChu/cordova-plugin-epson-epos2-tm-p20", "EPOS2_SYMBOL_QRCODE_MODEL_2", "EPOS2_PARAM_DEFAULT", 5,5,0, true)
+.then(res => console.debug(res))
+.catch(e => console.error(e))
+```
+
 #### .printBarCode128(data, type, hriPosition,hriFont,Bwidth,Bheight,terminate)
 
 Helper function to print barcode 128 CODEB
