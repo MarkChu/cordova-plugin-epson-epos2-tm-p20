@@ -296,7 +296,7 @@ var epos2 = {
       terminate,
     ) {
       var data = data;
-      return _exec("printBarCode", [data, type, , hriPosition || 0, hriFont || 0 , Bwidth || 2, Bheight || 70], arguments)
+      return _exec("printBarCode", [data, type, hriPosition || 0, hriFont || 0 , Bwidth || 2, Bheight || 70], arguments)
         .then(function(result) {
           return terminate ? _exec("sendData", [], []) : result;
         });
