@@ -54,6 +54,24 @@ public class epos2Plugin extends CordovaPlugin {
         put("TM-L90", Printer.TM_L90);
         put("TM-H6000", Printer.TM_H6000);
     }};
+    private static final Map<String, Integer> barcodeTypeMap = new HashMap<String, Integer>() {{
+        put("EPOS2_BARCODE_UPC_A", Printer.BARCODE_UPC_A);
+        put("EPOS2_BARCODE_UPC_E", Printer.BARCODE_UPC_E);
+        put("EPOS2_BARCODE_EAN13", Printer.BARCODE_EAN13);
+        put("EPOS2_BARCODE_JAN13", Printer.BARCODE_JAN13);
+        put("EPOS2_BARCODE_EAN8", Printer.BARCODE_EAN8);
+        put("EPOS2_BARCODE_JAN8", Printer.BARCODE_JAN8);
+        put("EPOS2_BARCODE_CODE39", Printer.BARCODE_CODE39);
+        put("EPOS2_BARCODE_ITF", Printer.BARCODE_ITF);
+        put("EPOS2_BARCODE_CODABAR", Printer.BARCODE_CODABAR);
+        put("EPOS2_BARCODE_CODE93", Printer.BARCODE_CODE93);
+        put("EPOS2_BARCODE_CODE128", Printer.BARCODE_CODE128);
+        put("EPOS2_BARCODE_GS1_128", Printer.BARCODE_GS1_128);
+        put("EPOS2_BARCODE_GS1_DATABAR_OMNIDIRECTIONAL", Printer.BARCODE_GS1_DATABAR_OMNIDIRECTIONAL);
+        put("EPOS2_BARCODE_GS1_DATABAR_TRUNCATED", Printer.BARCODE_GS1_DATABAR_TRUNCATED);
+        put("EPOS2_BARCODE_GS1_DATABAR_LIMITED", Printer.BARCODE_GS1_DATABAR_LIMITED);
+        put("EPOS2_BARCODE_GS1_DATABAR_EXPANDED", Printer.BARCODE_GS1_DATABAR_EXPANDED);
+    }};
     private CallbackContext discoverCallbackContext = null;
     private CallbackContext sendDataCallbackContext = null;
     private Printer printer = null;
@@ -81,8 +99,8 @@ public class epos2Plugin extends CordovaPlugin {
                     disconnectPrinter(args, callbackContext);
                 } else if (action.equals("printText")) {
                     printText(args, callbackContext);
-                } else if (action.equals("printBarCode128")) {
-                    printBarCode128(args, callbackContext);    
+                } else if (action.equals("printBarCode")) {
+                    printBarCode(args, callbackContext);    
                 } else if (action.equals("printLine")) {
                     printLine(args, callbackContext);    
                 } else if (action.equals("printImage")) {
@@ -311,7 +329,7 @@ public class epos2Plugin extends CordovaPlugin {
         }
     }
 
-    private void printBarCode128(final JSONArray args, final CallbackContext callbackContext) {
+    private void printBarCode(final JSONArray args, final CallbackContext callbackContext) {
         if (!_connectPrinter(callbackContext)) {
             callbackContext.error("Error 0x00013: Printer is not connected");
             return;
@@ -328,20 +346,24 @@ public class epos2Plugin extends CordovaPlugin {
             data = args.getString(0);
 
             if (args.length() > 1) {
-                hriPosition = args.getInt(1);
+                String type = args.getString(1);
+                bType = barcodeTypeMap.get(type);
             }
             if (args.length() > 2) {
-                hriFont = args.getInt(2);
+                hriPosition = args.getInt(2);
             }
             if (args.length() > 3) {
-                bWidth = args.getInt(3);
+                hriFont = args.getInt(3);
             }
             if (args.length() > 4) {
-                bHeight = args.getInt(4);
+                bWidth = args.getInt(4);
+            }
+            if (args.length() > 5) {
+                bHeight = args.getInt(5);
             }                        
         } catch (JSONException e) {
             callbackContext.error("Error 0x00000: Invalid arguments: " + e.getCause());
-            Log.e(TAG, "Invalid arguments for printBarCode128", e);
+            Log.e(TAG, "Invalid arguments for printBarCode", e);
             return;
         }
 
