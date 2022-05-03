@@ -19,7 +19,7 @@
     "cordova-ios"
   ],
   "author": "markchu929",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/MarkChu/cordova-plugin-epson-epos2-tm-p20/issues"
   },
