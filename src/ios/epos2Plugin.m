@@ -21,8 +21,8 @@ static NSDictionary *levelMap;
     printerStatus = nil;
     printerConnected = NO;
     printerSeries = EPOS2_TM_P20;
-    lang = EPOS2_MODEL_ANK;
-    textLang = EPOS2_LANG_EN;
+    lang = EPOS2_MODEL_TAIWAN;
+    textLang = EPOS2_LANG_ZH_TW;
 
     printerTypeMap = @{
         @"TM-M10":    [NSNumber numberWithInt:EPOS2_TM_M10],
