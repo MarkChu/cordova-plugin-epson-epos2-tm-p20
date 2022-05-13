@@ -91,6 +91,42 @@ public class epos2Plugin extends CordovaPlugin {
         put("EPOS2_BARCODE_GS1_DATABAR_LIMITED", Printer.BARCODE_GS1_DATABAR_LIMITED);
         put("EPOS2_BARCODE_GS1_DATABAR_EXPANDED", Printer.BARCODE_GS1_DATABAR_EXPANDED);
     }};
+    private static final Map<String, Integer> symbolTypeMap = new HashMap<String, Integer>() {{
+        put("EPOS2_SYMBOL_PDF417_STANDARD", Printer.SYMBOL_PDF417_STANDARD);
+        put("EPOS2_SYMBOL_PDF417_TRUNCATED", Printer.SYMBOL_PDF417_TRUNCATED);
+        put("EPOS2_SYMBOL_QRCODE_MODEL_1", Printer.SYMBOL_QRCODE_MODEL_1);
+        put("EPOS2_SYMBOL_QRCODE_MODEL_2", Printer.SYMBOL_QRCODE_MODEL_2);
+        put("EPOS2_SYMBOL_QRCODE_MICRO", Printer.SYMBOL_QRCODE_MICRO);
+        put("EPOS2_SYMBOL_MAXICODE_MODE_2", Printer.SYMBOL_MAXICODE_MODE_2);
+        put("EPOS2_SYMBOL_MAXICODE_MODE_3", Printer.SYMBOL_MAXICODE_MODE_3);
+        put("EPOS2_SYMBOL_MAXICODE_MODE_5", Printer.SYMBOL_MAXICODE_MODE_5);
+        put("EPOS2_SYMBOL_MAXICODE_MODE_6", Printer.SYMBOL_MAXICODE_MODE_6);
+        put("EPOS2_SYMBOL_GS1_DATABAR_STACKED", Printer.SYMBOL_GS1_DATABAR_STACKED);
+        put("EPOS2_SYMBOL_GS1_DATABAR_STACKED_OMNIDIRECTIONAL", Printer.SYMBOL_GS1_DATABAR_STACKED_OMNIDIRECTIONAL);
+        put("EPOS2_SYMBOL_GS1_DATABAR_EXPANDED_STACKED", Printer.SYMBOL_GS1_DATABAR_EXPANDED_STACKED);
+        put("EPOS2_SYMBOL_AZTECCODE_FULLRANGE", Printer.SYMBOL_AZTECCODE_FULLRANGE);
+        put("EPOS2_SYMBOL_AZTECCODE_COMPACT", Printer.SYMBOL_AZTECCODE_COMPACT);
+        put("EPOS2_SYMBOL_DATAMATRIX_SQUARE", Printer.SYMBOL_DATAMATRIX_SQUARE);
+        put("EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_8", Printer.SYMBOL_DATAMATRIX_RECTANGLE_8);
+        put("EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_12", Printer.SYMBOL_DATAMATRIX_RECTANGLE_12);
+        put("EPOS2_SYMBOL_DATAMATRIX_RECTANGLE_16", Printer.SYMBOL_DATAMATRIX_RECTANGLE_16);
+    }};
+    private static final Map<String, Integer> levelMap = new HashMap<String, Integer>() {{
+        put("EPOS2_LEVEL_0", Printer.LEVEL_0);
+        put("EPOS2_LEVEL_1", Printer.LEVEL_1);
+        put("EPOS2_LEVEL_2", Printer.LEVEL_2);
+        put("EPOS2_LEVEL_3", Printer.LEVEL_3);
+        put("EPOS2_LEVEL_4", Printer.LEVEL_4);
+        put("EPOS2_LEVEL_5", Printer.LEVEL_5);
+        put("EPOS2_LEVEL_6", Printer.LEVEL_6);
+        put("EPOS2_LEVEL_7", Printer.LEVEL_7);
+        put("EPOS2_LEVEL_8", Printer.LEVEL_8);
+        put("EPOS2_PARAM_DEFAULT", Printer.PARAM_DEFAULT);
+        put("EPOS2_LEVEL_L", Printer.LEVEL_L);
+        put("EPOS2_LEVEL_M", Printer.LEVEL_M);
+        put("EPOS2_LEVEL_Q", Printer.LEVEL_Q);
+        put("EPOS2_LEVEL_H", Printer.LEVEL_H);
+    }};
     private CallbackContext discoverCallbackContext = null;
     private CallbackContext sendDataCallbackContext = null;
     private Printer printer = null;
@@ -119,7 +155,9 @@ public class epos2Plugin extends CordovaPlugin {
                 } else if (action.equals("printText")) {
                     printText(args, callbackContext);
                 } else if (action.equals("printBarCode")) {
-                    printBarCode(args, callbackContext);    
+                    printBarCode(args, callbackContext);
+                } else if (action.equals("printSymbol")) {
+                    printSymbol(args, callbackContext);    
                 } else if (action.equals("printLine")) {
                     printLine(args, callbackContext);    
                 } else if (action.equals("printImage")) {
@@ -402,7 +440,60 @@ public class epos2Plugin extends CordovaPlugin {
         }
     }
 
+    private void printSymbol(final JSONArray args, final CallbackContext callbackContext) {
+        if (!_connectPrinter(callbackContext)) {
+            callbackContext.error("Error 0x00013: Printer is not connected");
+            return;
+        }
 
+        String data = "";
+        int sType = Printer.SYMBOL_QRCODE_MODEL_2;
+        int level = Printer.PARAM_DEFAULT;
+        int width = 3;
+        int height = 3;
+        int size = 0;
+
+        try {
+            data = args.getString(0);
+
+            if (args.length() > 1) {
+                String type = args.getString(1);
+                sType = symbolTypeMap.get(type);
+            }
+            if (args.length() > 2) {
+                String levelName = args.getString(2);
+                level = levelMap.get(levelName);
+            }
+            if (args.length() > 3) {
+                width = args.getInt(3);
+            }
+            if (args.length() > 4) {
+                height = args.getInt(4);
+            }
+            if (args.length() > 5) {
+                size = args.getInt(5);
+            }                        
+        } catch (JSONException e) {
+            callbackContext.error("Error 0x00000: Invalid arguments: " + e.getCause());
+            Log.e(TAG, "Invalid arguments for printBarCode", e);
+            return;
+        }
+
+        try {
+            printer.addSymbol(data, sType, level, width, height, size);
+
+            callbackContext.sendPluginResult(new PluginResult(Status.OK, true));
+        } catch (Epos2Exception e) {
+            callbackContext.error("Error 0x00040: Failed to add symbol data");
+            Log.e(TAG, "Error printing", e);
+            try {
+                printer.disconnect();
+                printerConnected = false;
+            } catch (Epos2Exception ex) {
+                Log.e(TAG, "Error disconnecting", ex);
+            }
+        }
+    }
 
     private void printLine(final JSONArray args, final CallbackContext callbackContext) {
         if (!_connectPrinter(callbackContext)) {
