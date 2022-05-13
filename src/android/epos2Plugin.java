@@ -54,6 +54,25 @@ public class epos2Plugin extends CordovaPlugin {
         put("TM-L90", Printer.TM_L90);
         put("TM-H6000", Printer.TM_H6000);
     }};
+    private static final Map<String, Integer> langTypeMap = new HashMap<String, Integer>() {{
+        put("EPOS2_MODEL_ANK", Printer.MODEL_ANK);
+        put("EPOS2_MODEL_CHINESE", Printer.MODEL_CHINESE);
+        put("EPOS2_MODEL_TAIWAN", Printer.MODEL_TAIWAN);
+        put("EPOS2_MODEL_KOREAN", Printer.MODEL_KOREAN);
+        put("EPOS2_MODEL_THAI", Printer.MODEL_THAI);
+        put("EPOS2_MODEL_SOUTHASIA", Printer.MODEL_SOUTHASIA);
+    }};
+    private static final Map<String, Integer> textLangTypeMap = new HashMap<String, Integer>() {{
+        put("EPOS2_LANG_EN", Printer.LANG_EN);
+        put("EPOS2_LANG_JA", Printer.LANG_JA);
+        put("EPOS2_LANG_ZH_CN", Printer.LANG_ZH_CN);
+        put("EPOS2_LANG_ZH_TW", Printer.LANG_ZH_TW);
+        put("EPOS2_LANG_KO", Printer.LANG_KO);
+        put("EPOS2_LANG_TH", Printer.LANG_TH);
+        put("EPOS2_LANG_VI", Printer.LANG_VI);
+        put("EPOS2_LANG_MULTI", Printer.LANG_MULTI);
+        put("EPOS2_PARAM_DEFAULT", Printer.PARAM_DEFAULT);
+    }};
     private static final Map<String, Integer> barcodeTypeMap = new HashMap<String, Integer>() {{
         put("EPOS2_BARCODE_UPC_A", Printer.BARCODE_UPC_A);
         put("EPOS2_BARCODE_UPC_E", Printer.BARCODE_UPC_E);
@@ -633,5 +652,18 @@ public class epos2Plugin extends CordovaPlugin {
         }
 
         return true;
+    }
+
+    private void setLang(final JSONArray args, final CallbackContext callbackContext) {
+        try {
+            printerLang = langTypeMap.get(args.getString(0)).intValue();
+            if (args.length() > 1) {
+                textLanguage = textLangTypeMap.get(args.getString(1)).intValue();
+            }
+        } catch (Exception e) {
+            callbackContext.error("Error 0x00000: Invalid arguments: " + e.getCause());
+            Log.e(TAG, "Error setting language", e);
+            return;
+        }
     }
 }
